@@ -48,8 +48,12 @@ def verify_data(generated, targets):
         raise err
 
 def check_data_loaded(generated, targets):
-    """ Ensures two data structures are not empty. Useful for metrics """
+    """
+    Ensures two data structures are not empty. Useful for metrics.
+        Also calls verify_data.
+    """
     if len(generated) != 0 and len(targets) != 0:
+        verify_data(generated, targets)
         return
     msg =   '''Generated and target data must be set prior to calling 'score'.
             Either call 'set_generated_and_targets' or 'load_files' '''
