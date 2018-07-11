@@ -1,24 +1,25 @@
 
 import logging
+import numpy as np
 
 from vert.metrics import metric
 from vert.metrics import infersent_similarity
 from vert.metrics import word_movers_distance
-from vert.metrics import rouge
+from vert.metrics import rouge_score
 
-from vert.utils import general
+from vert.utils import general as gen
 
 
 class Vert(metric.Metric):
-    def __init__(self, generated_f, target_f, include_rouge, k_value):
+    def __init__(self, k_value='1/3', rouge_type=None):
         self.logger = logging.getLogger('root')
-        super(Vert, self).__init__(generated_f, target_f)
+        super(Vert, self).__init__()
 
-        self.include_rouge = include_rouge
-        self.k_value = k_value
+        self.rouge_type = rouge_type
+        self.k_value = gen.format_fraction(k_value) if '/' in k_value else k_value
         self.wmd = word_movers_distance.WordMoversDistance
         self.sim = infersent_similarity.InfersentSimilarity
-        self.rouge = rouge.Rouge
+        self.rouge = rouge_score.Rouge
 
     def score(self, make_report=True):
         """
@@ -33,32 +34,50 @@ class Vert(metric.Metric):
             float: vert score
         """
         self.logger.debug("Calculating VERT scores.")
-        if len(self.generated) == 0:
-            self.load_files()
+        gen.check_data_loaded(self.generated, self.targets)
 
-        wmd_score = 0.0
-        sim_score = 0.0
-        vert_score = 0.0
-        if self.include_rouge:
-            rouge_1 = 0.0
-            rouge_2 = 0.0
-            rouge_l = 0.0
+        # Calculate Infersent cosine similarity
+        self.sim = self.sim()
+        self.sim.set_generated_and_targets(self.generated, self.targets)
+        sim_score = self.sim.score(make_report=False)
+        del self.sim
+
+        # Calcuate word mover's distance
+        self.wmd = self.wmd()
+        self.wmd.set_generated_and_targets(self.generated, self.targets)
+        wmd_score = self.wmd.score(make_report=False)
+        del self.wmd
+
+        # Calculate VERT score
+        vert_score = self._calc_vert_final(sim_score, wmd_score)
+
+        # Calculate all ROUGE scores
+        if self.rouge_type is not None:
+            self.rouge = self.rouge(type=self.rouge_type)
+            self.rouge.set_generated_and_targets(self.generated, self.targets)
+            r_scores = self.rouge.score(make_report=False)
+            rouge_1 = r_scores['rouge_1']
+            rouge_2 = r_scores['rouge_2']
+            rouge_l = r_scores['rouge_l']
+            rouge_type = r_scores['rouge_type']
+            del self.rouge
 
         self.logger.debug("Done: calculating VERT scores.")
         if make_report:
-            if self.include_rouge:
+            if self.rouge_type is not None:
                 return self.generate_report(
-                    rouge_1=rouge_1,
-                    rouge_2=rouge_2,
-                    rouge_l=rouge_l,
-                    wmd=wmd_score,
-                    sim=sim_score,
-                    vert=vert_score
+                    rouge_1=gen.fmt_rpt_line(rouge_1),
+                    rouge_2=gen.fmt_rpt_line(rouge_2),
+                    rouge_l=gen.fmt_rpt_line(rouge_l),
+                    rouge_type=rouge_type,
+                    wmd=gen.fmt_rpt_line(wmd_score),
+                    sim=gen.fmt_rpt_line(sim_score),
+                    vert=gen.fmt_rpt_line(vert_score)
                 )
             return self.generate_report(
-                wmd=wmd_score,
-                sim=sim_score,
-                vert=vert_score
+                wmd=gen.fmt_rpt_line(wmd_score),
+                sim=gen.fmt_rpt_line(sim_score),
+                vert=gen.fmt_rpt_line(vert_score)
             )
         return vert_score
 
@@ -72,5 +91,12 @@ class Vert(metric.Metric):
             None
         """
         if filename == '':
-            filename = general.generate_filename('vert')
+            filename = gen.generate_filename('vert')
         super(Vert, cls).save_report_to_file(report, out_dir, filename)
+
+    def _calc_vert_final(self, sim, dis):
+        if dis == 0.0:
+            score = 1.0
+        else:
+            score = float(np.tanh(float(sim) / dis**(self.k_value)))
+        return score * 100

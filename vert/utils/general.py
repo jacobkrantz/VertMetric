@@ -1,6 +1,14 @@
 
 from datetime import datetime
+import logging
 import numpy as np
+
+"""
+File: general.py
+Author: Jacob Krantz
+Description:
+    Misc. functions called for general utility purposes.
+"""
 
 def tokenize(txt):
     return txt.strip('\n')
@@ -38,3 +46,36 @@ def verify_data(generated, targets):
         logger = logging.getLogger('root')
         logger.exception("0 summaries being compared.")
         raise err
+
+def check_data_loaded(generated, targets):
+    """ Ensures two data structures are not empty. Useful for metrics """
+    if len(generated) != 0 and len(targets) != 0:
+        return
+    msg =   '''Generated and target data must be set prior to calling 'score'.
+            Either call 'set_generated_and_targets' or 'load_files' '''
+    logger = logging.getLogger('root')
+    logger.exception(msg)
+    raise UnboundLocalError(msg)
+
+def format_fraction(k):
+    """
+    Converts a string fraction ('x/y') into a float value.
+    Args:
+        k (int|float|string): to be converted to a float.
+    Returns:
+        float
+    """
+    if type(k) in [float, int]:
+        return float(k)
+
+    if '/' not in k:
+        logger = logging.getLogger('root')
+        msg = 'String fraction must have \'/\' character to be converted to float.'
+        logger.exception(msg)
+        raise ValueError(msg)
+
+    return float(k.split('/')[0]) / int(k.split('/')[1])
+
+def fmt_rpt_line(l):
+    """ format a numerical report line to 3 decimal places. """
+    return '{0:.3f}'.format(float(l))

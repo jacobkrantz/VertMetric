@@ -3,44 +3,42 @@ import json
 import logging
 import os
 
-from vert.utils import general
+from vert.utils import general as gen
 
 class Metric(object):
-    def __init__(self, generated_f, target_f):
-        self.generated_f = generated_f
-        self.target_f = target_f
+    def __init__(self):
         self.generated = list()
         self.targets = list()
 
     def score(self, make_report=True):
         raise NotImplementedError("Subclasses of Metric must implement this.")
 
-    def load_files(self):
+    def load_files(self, generated_f, target_f):
         self.generated = list()
         self.targets = list()
 
-        with open(self.generated_f, 'r') as gen_f:
+        with open(generated_f, 'r') as gen_f:
             for line in gen_f:
                 line = line.strip('\n')
                 self.generated.append(line)
 
-        with open(self.target_f, 'r') as tgt_f:
+        with open(target_f, 'r') as tgt_f:
             for line in tgt_f:
                 line = line.strip('\n')
                 self.targets.append(line)
-        general.verify_data(self.generated, self.targets)
+        gen.verify_data(self.generated, self.targets)
 
     def set_generated_and_targets(self, generated, targets):
         """ Can set the data lists manually. """
         self.targets = targets
         self.generated = generated
-        general.verify_data(self.generated, self.targets)
+        gen.verify_data(self.generated, self.targets)
 
     def generate_report(self, **kwargs):
         report = {
             'num_tested':str(len(self.generated)),
-            'avg_generated_word_cnt':"{0:.3f}".format(general.avg_word_count(self.generated)),
-            'avg_target_word_cnt':"{0:.3f}".format(general.avg_word_count(self.targets)),
+            'avg_generated_word_cnt':gen.fmt_rpt_line(gen.avg_word_count(self.generated)),
+            'avg_target_word_cnt':gen.fmt_rpt_line(gen.avg_word_count(self.targets)),
         }
         for key, value in kwargs.iteritems():
             report[key] = value
@@ -48,9 +46,9 @@ class Metric(object):
 
     @classmethod
     def display_report(cls, report):
-        print('-----------------------------')
-        print('        score report         ')
-        print('-----------------------------')
+        print('-------------------------------')
+        print('         score report          ')
+        print('-------------------------------')
         for k, v in report.iteritems():
             if len(k) >= 15:
                 tab = ':\t'

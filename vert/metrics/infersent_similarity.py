@@ -6,15 +6,14 @@ from vert.utils import general
 
 
 class InfersentSimilarity(metric.Metric):
-    def __init__(self, generated, target):
+    def __init__(self):
         self.logger = logging.getLogger('root')
-        super(InfersentSimilarity, self).__init__(generated, target)
+        super(InfersentSimilarity, self).__init__()
 
     def score(self, make_report=True):
         self.logger.debug("Calculating Infersent Similarity scores.")
         self.logger.warn("Not implemened yet.")
-        if len(self.generated) == 0:
-            self.load_files()
+        general.check_data_loaded(self.generated, self.targets)
 
         sim = 0.0
 
