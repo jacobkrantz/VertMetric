@@ -1,10 +1,13 @@
 
+from itertools import starmap
 import logging
+import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import torch
 
 from vert.metrics import metric
 from vert.utils import general as gen
+from vert.utils import InfersentEncoder
 
 
 class InfersentSimilarity(metric.Metric):
@@ -14,14 +17,14 @@ class InfersentSimilarity(metric.Metric):
 
     def score(self, make_report=True):
         self.logger.debug("Calculating Infersent Similarity scores.")
-        self.logger.warn("Not implemened yet.")
         gen.check_data_loaded(self.generated, self.targets)
 
-        infersent = torch.load(
-            "./data/infersent.allnli.pickle",
-            map_location=lambda storage,
-            loc: storage
-        )
+        infersent = InfersentEncoder({'bsize': 64, 'word_emb_dim': 300,
+                                'enc_lstm_dim': 2048, 'pool_type': 'max',
+                                'dpout_model': 0.0, 'version': 2})
+        infersent.load_state_dict(torch.load('./data/infersent.params'))
+
+
         infersent.set_glove_path("./data/glove.840B.300d.txt")
         infersent.build_vocab_k_words(1000000)
 
