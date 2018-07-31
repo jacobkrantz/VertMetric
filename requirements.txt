@@ -4,4 +4,6 @@ nltk==3.3
 numpy==1.14.5
 pyemd==0.5.1
 rouge==0.3.1
+scikit-learn==0.19.1
 six==1.11.0
+torch==0.4.0
