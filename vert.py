@@ -5,8 +5,8 @@ from vert.metrics import word_movers_distance
 from vert.metrics import infersent_similarity
 from vert.metrics import vert_score
 from vert.metrics import rouge_score
-
 from vert.utils import vert_logger
+
 """
 File: vert.py
 Author: Jacob Krantz

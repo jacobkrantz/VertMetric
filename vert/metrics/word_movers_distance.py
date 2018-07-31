@@ -3,10 +3,9 @@ from gensim.models import KeyedVectors
 from itertools import starmap
 import logging
 from nltk.corpus import stopwords
-from nltk import download
 from nltk.downloader import Downloader
+from nltk import download
 import numpy as np
-
 
 from vert.metrics import metric
 from vert.utils import general as gen

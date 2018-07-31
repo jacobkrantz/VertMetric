@@ -6,7 +6,6 @@ from vert.metrics import metric
 from vert.metrics import infersent_similarity
 from vert.metrics import word_movers_distance
 from vert.metrics import rouge_score
-
 from vert.utils import general as gen
 
 

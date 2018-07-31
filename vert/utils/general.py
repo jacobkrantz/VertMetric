@@ -61,25 +61,6 @@ def check_data_loaded(generated, targets):
     logger.exception(msg)
     raise UnboundLocalError(msg)
 
-def format_fraction(k):
-    """
-    Converts a string fraction ('x/y') into a float value.
-    Args:
-        k (int|float|string): to be converted to a float.
-    Returns:
-        float
-    """
-    if type(k) in [float, int]:
-        return float(k)
-
-    if '/' not in k:
-        logger = logging.getLogger('root')
-        msg = 'String fraction must have \'/\' character to be converted to float.'
-        logger.exception(msg)
-        raise ValueError(msg)
-
-    return float(k.split('/')[0]) / int(k.split('/')[1])
-
 def fmt_rpt_line(l):
     """ format a numerical report line to 3 decimal places. """
     return '{0:.3f}'.format(float(l))

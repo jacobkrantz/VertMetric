@@ -11,19 +11,19 @@ class Rouge(metric.Metric):
         """
         Subclass of Metric.
         Args:
-            type (char): ('recall'|'precision'|'f_measure')
+            type (str): ('recall'|'precision'|'f-measure')
         """
         super(Rouge, self).__init__()
         self.logger = logging.getLogger('root')
-        if type not in ['recall','precision','f_measure']:
-            msg = "Type must be one of 'recall','precision', or 'f_measure'."
+        if type not in ['recall','precision','f-measure']:
+            msg = "Type must be one of 'recall','precision', or 'f-measure'."
             self.logger.exception(msg)
             raise ValueError(msg)
         self.type = type
 
     def score(self, make_report=True):
         self.logger.debug("Calculating ROUGE scores.")
-        
+
         gen.check_data_loaded(self.generated, self.targets)
         r_scores = RougeLib().get_scores(
             self.generated,
