@@ -23,13 +23,13 @@ Primary usage:
         --generated GENERATED
         --target TARGET
         [--out_dir OUT_DIR]
-        [--k_value K_VALUE]
+        [--alpha ALPHA]
         [--rouge_type ROUGE_TYPE]
 TODO: See docs for all CLI functions and arguments.
 """
 
-def score(generated, target, out_dir='./', k_value='1/3', rouge_type=None):
-    v = vert_score.Vert(k_value=k_value, rouge_type=rouge_type)
+def score(generated, target, out_dir='./', alpha=5, rouge_type=None):
+    v = vert_score.Vert(alpha=alpha, rouge_type=rouge_type)
     v.load_files(generated, target)
     report = v.score()
     v.save_report_to_file(report, out_dir)

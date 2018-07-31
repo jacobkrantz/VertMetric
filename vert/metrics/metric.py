@@ -5,6 +5,12 @@ import os
 
 from vert.utils import general as gen
 
+"""
+Base class for all metrics used in the vert evaluation.
+All subclasses must override the score() function.
+Any of the below functions can be overridden.
+"""
+
 class Metric(object):
     def __init__(self):
         self.generated = list()
@@ -14,6 +20,19 @@ class Metric(object):
         raise NotImplementedError("Subclasses of Metric must implement this.")
 
     def load_files(self, generated_f, target_f):
+        """
+        Loads self.generated and self.targets with summaries from their
+            respective files.
+        Args:
+            generated_f (str): filename of the generated summaries. Each line
+                is its own summary.
+            target_f (str): target filename. Contains target summaries for
+                the generated summaries to be compared to. Each line is its
+                own summary. line[i] of target_f corresponds to line[i] of
+                the generated_f.
+        Returns:
+            None
+        """
         self.generated = list()
         self.targets = list()
 
@@ -29,7 +48,16 @@ class Metric(object):
         gen.verify_data(self.generated, self.targets)
 
     def set_generated_and_targets(self, generated, targets):
-        """ Can set the data lists manually. """
+        """
+            Can set self.generated and self.targets manually.
+            Args:
+                generated (list<str>): list of generated summaries. Loads into
+                    self.generated.
+                targets (list<str>): list of target summaries. Loads into
+                    self.targets.
+            Returns:
+                None
+        """
         self.targets = targets
         self.generated = generated
         gen.verify_data(self.generated, self.targets)

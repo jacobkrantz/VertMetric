@@ -10,12 +10,12 @@ from vert.utils import general as gen
 
 
 class Vert(metric.Metric):
-    def __init__(self, k_value='1/3', rouge_type=None):
+    def __init__(self, alpha=5, rouge_type=None):
         self.logger = logging.getLogger('root')
         super(Vert, self).__init__()
 
         self.rouge_type = rouge_type
-        self.k_value = gen.format_fraction(k_value) if '/' in k_value else k_value
+        self.alpha = float(alpha)
         self.wmd = word_movers_distance.WordMoversDistance
         self.sim = infersent_similarity.InfersentSimilarity
         self.rouge = rouge_score.Rouge
@@ -94,8 +94,4 @@ class Vert(metric.Metric):
         super(Vert, cls).save_report_to_file(report, out_dir, filename)
 
     def _calc_vert_final(self, sim, dis):
-        if dis == 0.0:
-            score = 1.0
-        else:
-            score = float(np.tanh(float(sim) / dis**(self.k_value)))
-        return score * 100
+        return (1./2.) * (1. + (sim - ((1./self.alpha) * dis)))
