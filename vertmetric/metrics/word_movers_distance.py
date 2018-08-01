@@ -7,8 +7,8 @@ from nltk.downloader import Downloader
 from nltk import download
 import numpy as np
 
-from vert.metrics import metric
-from vert.utils import general as gen
+from vertmetric.metrics import metric
+from vertmetric.utils import general as gen
 
 
 class WordMoversDistance(metric.Metric):
@@ -16,7 +16,7 @@ class WordMoversDistance(metric.Metric):
         self.logger = logging.getLogger('root')
         super(WordMoversDistance, self).__init__()
 
-        self.logger.debug("Loading Word2Vec embeddings.")
+        self.logger.info("Loading Word2Vec embeddings.")
         if not Downloader().is_installed('stopwords'):
             download('stopwords')
         self.stopwords = stopwords.words('english')
@@ -24,10 +24,10 @@ class WordMoversDistance(metric.Metric):
             "./data/GoogleNews-vectors-negative300.bin", #.gz takes 2.5x longer
             binary=True
         )
-        self.logger.debug("Done: loading Word2Vec embeddings.")
+        self.logger.info("Done: loading Word2Vec embeddings.")
 
     def score(self, make_report=True):
-        self.logger.debug("Calculating Word Mover's Distance scores.")
+        self.logger.info("Calculating Word Mover's Distance scores.")
         self.logger.warn("Not implemened yet.")
         gen.check_data_loaded(self.generated, self.targets)
 
@@ -36,7 +36,7 @@ class WordMoversDistance(metric.Metric):
             zip(self.generated, self.targets)
         )))
 
-        self.logger.debug("Done: calculating Word Mover's Distance scores.")
+        self.logger.info("Done: calculating Word Mover's Distance scores.")
         if make_report:
             return self.generate_report(wmd=gen.fmt_rpt_line(wmd))
         return wmd

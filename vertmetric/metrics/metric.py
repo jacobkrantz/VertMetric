@@ -3,7 +3,7 @@ import json
 import logging
 import os
 
-from vert.utils import general as gen
+from vertmetric.utils import general as gen
 
 """
 Base class for all metrics used in the vert evaluation.
@@ -104,8 +104,8 @@ class Metric(object):
 
         out_dir = out_dir + '/' if out_dir[-1] != '/' else out_dir
         if os.path.isfile(out_dir + filename):
-            logger.debug('Overwriting existing file.')
+            logger.info('Overwriting existing file.')
 
         with open(out_dir + filename, 'w') as f:
             json.dump(report, f, indent=2, sort_keys=True)
-        logger.debug('Saved report to \'' + out_dir + filename + '\'')
+        logger.info('Saved report to \'' + out_dir + filename + '\'')

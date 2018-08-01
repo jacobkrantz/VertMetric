@@ -5,9 +5,9 @@ import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 import torch
 
-from vert.metrics import metric
-from vert.utils import general as gen
-from vert.utils import InfersentEncoder
+from vertmetric.metrics import metric
+from vertmetric.utils import general as gen
+from vertmetric.utils import InfersentEncoder
 
 
 class InfersentSimilarity(metric.Metric):
@@ -16,7 +16,7 @@ class InfersentSimilarity(metric.Metric):
         super(InfersentSimilarity, self).__init__()
 
     def score(self, make_report=True):
-        self.logger.debug("Calculating Infersent Similarity scores.")
+        self.logger.info("Calculating Infersent Similarity scores.")
         gen.check_data_loaded(self.generated, self.targets)
 
         infersent = InfersentEncoder({'bsize': 64, 'word_emb_dim': 300,
@@ -29,16 +29,16 @@ class InfersentSimilarity(metric.Metric):
         infersent.build_vocab_k_words(1000000)
 
         embeddings_1 = infersent.encode(self.generated, tokenize=True)
-        self.logger.debug('InferSent: Embeddings generated for group 1.')
+        self.logger.info('InferSent: Embeddings generated for group 1.')
         embeddings_2 = infersent.encode(self.targets, tokenize=True)
-        self.logger.debug('InferSent: Embeddings generated for group 2.')
+        self.logger.info('InferSent: Embeddings generated for group 2.')
 
         sim = np.mean(list(starmap(
             lambda e1,e2: self._cos_sim(e1,e2),
             zip(embeddings_1, embeddings_2)
         )))
 
-        self.logger.debug("Done: calculating Infersent Similarity scores.")
+        self.logger.info("Done: calculating Infersent Similarity scores.")
         if make_report:
             return self.generate_report(sim=gen.fmt_rpt_line(sim))
         return sim

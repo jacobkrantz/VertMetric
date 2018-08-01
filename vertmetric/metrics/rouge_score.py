@@ -2,8 +2,8 @@
 import logging
 from rouge import Rouge as RougeLib
 
-from vert.metrics import metric
-from vert.utils import general as gen
+from vertmetric.metrics import metric
+from vertmetric.utils import general as gen
 
 
 class Rouge(metric.Metric):
@@ -22,7 +22,7 @@ class Rouge(metric.Metric):
         self.type = type
 
     def score(self, make_report=True):
-        self.logger.debug("Calculating ROUGE scores.")
+        self.logger.info("Calculating ROUGE scores.")
 
         gen.check_data_loaded(self.generated, self.targets)
         r_scores = RougeLib().get_scores(
@@ -35,7 +35,7 @@ class Rouge(metric.Metric):
         rouge_l = r_scores['rouge-l'][self.type[0]] * 100
         print rouge_1, rouge_2, rouge_l
 
-        self.logger.debug("Done: calculating ROUGE scores.")
+        self.logger.info("Done: calculating ROUGE scores.")
         if make_report:
             return self.generate_report(
                 rouge_1=gen.fmt_rpt_line(rouge_1),

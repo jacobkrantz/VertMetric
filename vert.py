@@ -1,11 +1,11 @@
 
 import fire
 
-from vert.metrics import word_movers_distance
-from vert.metrics import infersent_similarity
-from vert.metrics import vert_score
-from vert.metrics import rouge_score
-from vert.utils import vert_logger
+from vertmetric.metrics import word_movers_distance
+from vertmetric.metrics import infersent_similarity
+from vertmetric.metrics import vert_score
+from vertmetric.metrics import rouge_score
+from vertmetric.utils import vert_logger
 
 """
 File: vert.py

@@ -2,11 +2,11 @@
 import logging
 import numpy as np
 
-from vert.metrics import metric
-from vert.metrics import infersent_similarity
-from vert.metrics import word_movers_distance
-from vert.metrics import rouge_score
-from vert.utils import general as gen
+from vertmetric.metrics import metric
+from vertmetric.metrics import infersent_similarity
+from vertmetric.metrics import word_movers_distance
+from vertmetric.metrics import rouge_score
+from vertmetric.utils import general as gen
 
 
 class Vert(metric.Metric):
@@ -32,7 +32,7 @@ class Vert(metric.Metric):
             OR
             float: vert score
         """
-        self.logger.debug("Calculating VERT scores.")
+        self.logger.info("Calculating VERT scores.")
         gen.check_data_loaded(self.generated, self.targets)
 
         # Calculate Infersent cosine similarity
@@ -61,7 +61,7 @@ class Vert(metric.Metric):
             rouge_type = r_scores['rouge_type']
             del self.rouge
 
-        self.logger.debug("Done: calculating VERT scores.")
+        self.logger.info("Done: calculating VERT scores.")
         if make_report:
             if self.rouge_type is not None:
                 return self.generate_report(
