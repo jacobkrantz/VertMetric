@@ -11,7 +11,7 @@ from vertmetric.utils import general as gen
 
 class Vert(metric.Metric):
     def __init__(self, alpha=5, rouge_type=None):
-        self.logger = logging.getLogger('root')
+        self.logger = logging.getLogger('vert')
         super(Vert, self).__init__()
 
         self.rouge_type = rouge_type
@@ -20,12 +20,12 @@ class Vert(metric.Metric):
         self.sim = infersent_similarity.InfersentSimilarity
         self.rouge = rouge_score.Rouge
 
-    def score(self, make_report=True):
+    def score(self, full_report=True):
         """
         Calculates the VERT score for the generated summaries as compared to
             the respective targets.
         Args:
-            make_report (bool): if True, returns a score report containing each
+            full_report (bool): if True, returns a score report containing each
                 sub-score. Otherwise returns the individual VERT score.
         Returns:
             dict: score report
@@ -38,13 +38,13 @@ class Vert(metric.Metric):
         # Calculate Infersent cosine similarity
         self.sim = self.sim()
         self.sim.set_generated_and_targets(self.generated, self.targets)
-        sim_score = self.sim.score(make_report=False)
+        sim_score = self.sim.score(full_report=False)
         del self.sim
 
         # Calcuate word mover's distance
         self.wmd = self.wmd()
         self.wmd.set_generated_and_targets(self.generated, self.targets)
-        wmd_score = self.wmd.score(make_report=False)
+        wmd_score = self.wmd.score(full_report=False)
         del self.wmd
 
         # Calculate VERT score
@@ -54,7 +54,7 @@ class Vert(metric.Metric):
         if self.rouge_type is not None:
             self.rouge = self.rouge(type=self.rouge_type)
             self.rouge.set_generated_and_targets(self.generated, self.targets)
-            r_scores = self.rouge.score(make_report=False)
+            r_scores = self.rouge.score(full_report=False)
             rouge_1 = r_scores['rouge_1']
             rouge_2 = r_scores['rouge_2']
             rouge_l = r_scores['rouge_l']
@@ -62,7 +62,7 @@ class Vert(metric.Metric):
             del self.rouge
 
         self.logger.info("Done: calculating VERT scores.")
-        if make_report:
+        if full_report:
             if self.rouge_type is not None:
                 return self.generate_report(
                     rouge_1=gen.fmt_rpt_line(rouge_1),

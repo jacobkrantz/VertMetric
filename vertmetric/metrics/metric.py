@@ -4,6 +4,7 @@ import logging
 import os
 
 from vertmetric.utils import general as gen
+from vertmetric.utils import vert_logger
 
 """
 Base class for all metrics used in the vert evaluation.
@@ -13,10 +14,11 @@ Any of the below functions can be overridden.
 
 class Metric(object):
     def __init__(self):
+        vert_logger.setup_custom_logger('vert', logging.ERROR)
         self.generated = list()
         self.targets = list()
 
-    def score(self, make_report=True):
+    def score(self, full_report=True):
         raise NotImplementedError("Subclasses of Metric must implement this.")
 
     def load_files(self, generated_f, target_f):
@@ -95,7 +97,7 @@ class Metric(object):
             out_dir (string): directory to save report.
             filename (string): location to save report.
         """
-        logger = logging.getLogger('root')
+        logger = logging.getLogger('vert')
         if type(report) != dict:
             logger.exception('Report needs to be a python dict.')
             raise ValueError('Report needs to be a python dict.')

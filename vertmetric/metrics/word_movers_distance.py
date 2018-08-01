@@ -13,7 +13,7 @@ from vertmetric.utils import general as gen
 
 class WordMoversDistance(metric.Metric):
     def __init__(self):
-        self.logger = logging.getLogger('root')
+        self.logger = logging.getLogger('vert')
         super(WordMoversDistance, self).__init__()
 
         self.logger.info("Loading Word2Vec embeddings.")
@@ -28,7 +28,6 @@ class WordMoversDistance(metric.Metric):
 
     def score(self, make_report=True):
         self.logger.info("Calculating Word Mover's Distance scores.")
-        self.logger.warn("Not implemened yet.")
         gen.check_data_loaded(self.generated, self.targets)
 
         wmd = np.mean(list(starmap(

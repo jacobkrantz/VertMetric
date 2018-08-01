@@ -1,14 +1,15 @@
 
 import fire
+import logging
 
-from vertmetric.metrics import word_movers_distance
-from vertmetric.metrics import infersent_similarity
-from vertmetric.metrics import vert_score
-from vertmetric.metrics import rouge_score
-from vertmetric.utils import vert_logger
+from .metrics import word_movers_distance
+from .metrics import infersent_similarity
+from .metrics import vert_score
+from .metrics import rouge_score
+from .utils import vert_logger
 
 """
-File: vert.py
+File: __main__.py
 Author: Jacob Krantz
 Description:
     Command Line Interface for scoring the quality of sentences using VERT.
@@ -56,11 +57,14 @@ def rouge(generated, target, rouge_type='recall', out_dir='./'):
     rg.save_report_to_file(report, out_dir)
     rg.display_report(report)
 
-if __name__ == '__main__':
-    vert_logger.setup_custom_logger('vert', logging.INFO)
+def main():
+    vert_logger.setup_custom_logger('vert')
     fire.Fire({
         'score': score,
         'wmd': wmd,
         'sim': sim,
         'rouge': rouge,
     })
+
+if __name__ == '__main__':
+    main()

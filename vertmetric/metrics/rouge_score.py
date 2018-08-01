@@ -14,14 +14,14 @@ class Rouge(metric.Metric):
             type (str): ('recall'|'precision'|'f-measure')
         """
         super(Rouge, self).__init__()
-        self.logger = logging.getLogger('root')
+        self.logger = logging.getLogger('vert')
         if type not in ['recall','precision','f-measure']:
             msg = "Type must be one of 'recall','precision', or 'f-measure'."
             self.logger.exception(msg)
             raise ValueError(msg)
         self.type = type
 
-    def score(self, make_report=True):
+    def score(self, full_report=True):
         self.logger.info("Calculating ROUGE scores.")
 
         gen.check_data_loaded(self.generated, self.targets)
@@ -33,10 +33,9 @@ class Rouge(metric.Metric):
         rouge_1 = r_scores['rouge-1'][self.type[0]] * 100
         rouge_2 = r_scores['rouge-2'][self.type[0]] * 100
         rouge_l = r_scores['rouge-l'][self.type[0]] * 100
-        print rouge_1, rouge_2, rouge_l
 
         self.logger.info("Done: calculating ROUGE scores.")
-        if make_report:
+        if full_report:
             return self.generate_report(
                 rouge_1=gen.fmt_rpt_line(rouge_1),
                 rouge_2=gen.fmt_rpt_line(rouge_2),

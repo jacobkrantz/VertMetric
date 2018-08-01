@@ -34,16 +34,24 @@ def verify_data(generated, targets):
         None
     """
     try:
+        assert isinstance(generated, list)
+        assert isinstance(targets, list)
+    except AssertionError as err:
+        logger = logging.getLogger('vert')
+        logger.exception("both 'generated' and 'targets' must be of type 'list'.")
+        raise err
+
+    try:
         assert len(generated) == len(targets)
     except AssertionError as err:
-        logger = logging.getLogger('root')
+        logger = logging.getLogger('vert')
         logger.exception("Unequal number of summaries in generated vs target files.")
         raise err
 
     try:
         assert len(generated) > 0
     except AssertionError as err:
-        logger = logging.getLogger('root')
+        logger = logging.getLogger('vert')
         logger.exception("0 summaries being compared.")
         raise err
 
@@ -57,7 +65,7 @@ def check_data_loaded(generated, targets):
         return
     msg =   '''Generated and target data must be set prior to calling 'score'.
             Either call 'set_generated_and_targets' or 'load_files' '''
-    logger = logging.getLogger('root')
+    logger = logging.getLogger('vert')
     logger.exception(msg)
     raise UnboundLocalError(msg)
 

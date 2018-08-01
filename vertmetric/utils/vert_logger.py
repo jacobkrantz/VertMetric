@@ -1,15 +1,19 @@
 import logging
 
-def setup_custom_logger(name):
-    formatter = logging.Formatter(
-        fmt='%(asctime)s %(levelname)s: %(message)s',
-        datefmt='%X'
-    )
-
-    handler = logging.StreamHandler()
-    handler.setFormatter(formatter)
-
+def setup_custom_logger(name, level=logging.INFO):
+    """
+    Only set the logger once.
+    If called again, will only return logger.
+    """
     logger = logging.getLogger(name)
-    logger.setLevel(logging.DEBUG)
-    logger.addHandler(handler)
+    if not len(logger.handlers):
+        formatter = logging.Formatter(
+            fmt='%(asctime)s %(levelname)s: %(message)s',
+            datefmt='%X'
+        )
+        handler = logging.StreamHandler()
+        handler.setFormatter(formatter)
+        logger.setLevel(level)
+        logger.addHandler(handler)
+
     return logger
