@@ -1,10 +1,12 @@
 
 import fire
+import logging
 
 from vertmetric.metrics import word_movers_distance
 from vertmetric.metrics import infersent_similarity
 from vertmetric.metrics import vert_score
 from vertmetric.metrics import rouge_score
+from vertmetric.utils import vert_downloader
 from vertmetric.utils import vert_logger
 
 """
@@ -56,6 +58,9 @@ def rouge(generated, target, rouge_type='recall', out_dir='./'):
     rg.save_report_to_file(report, out_dir)
     rg.display_report(report)
 
+def download(force=False):
+    vert_downloader.download(force)
+
 if __name__ == '__main__':
     vert_logger.setup_custom_logger('vert', logging.INFO)
     fire.Fire({
@@ -63,4 +68,5 @@ if __name__ == '__main__':
         'wmd': wmd,
         'sim': sim,
         'rouge': rouge,
+        'download': download,
     })

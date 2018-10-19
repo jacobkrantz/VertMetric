@@ -1,2 +1,2 @@
 # Vert
-VERT: An abstractive summarization evaluation package
+VERT: An abstractive summarization evaluation package  
