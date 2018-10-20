@@ -1,5 +1,6 @@
 
 import fire
+import logging
 
 from vertmetric.metrics import word_movers_distance
 from vertmetric.metrics import infersent_similarity

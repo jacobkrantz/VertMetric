@@ -26,7 +26,7 @@ class WordMoversDistance(metric.Metric):
         )
         self.logger.info("Done: loading Word2Vec embeddings.")
 
-    def score(self, make_report=True):
+    def score(self, full_report=True):
         self.logger.info("Calculating Word Mover's Distance scores.")
         gen.check_data_loaded(self.generated, self.targets)
 
@@ -36,7 +36,7 @@ class WordMoversDistance(metric.Metric):
         )))
 
         self.logger.info("Done: calculating Word Mover's Distance scores.")
-        if make_report:
+        if full_report:
             return self.generate_report(wmd=gen.fmt_rpt_line(wmd))
         return wmd
 
