@@ -103,8 +103,14 @@ venv.bak/
 # mypy
 .mypy_cache/
 
+# VSCode
+.vscode
+
 # misc
-data/
+data/glove.840B.300d.txt
+data/GoogleNews-vectors-negative300.bin
+data/infersent.params
+
 reports/
 
 # VSCode
