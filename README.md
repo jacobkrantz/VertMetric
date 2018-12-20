@@ -1,8 +1,13 @@
 # VertMetric
-The Versatile Evaluation of Reduced Texts metric (VERT) is an abstractive summarization evaluation package. Abstractive summaries allow for a summary to include words that are different than the specfic ones included in the original text. This is unlike the more traditional approach of extractive summarization, where words are selected from the original text and reordered. Existing evaluation metrics fail to accurately judge modern abstractive summaries. VERT exists to fill this hole.
+The Versatile Evaluation of Reduced Texts metric (VERT) is an abstractive summarization evaluation package. Abstractive summaries allow for a summary to include words that are different than the specfic ones included in the original text. This is unlike the more traditional approach of extractive summarization, where words are selected from the original text and reordered. Existing evaluation metrics fail to accurately judge modern abstractive summaries. VERT exists to fill this hole.  
+
+The official VERT specification can be found [here](https://arxiv.org/abs/1810.08838).  
 
 ## What does VertMetric do?  
-VertMetric evaluates the VERT score for a collection of generated summaries. VertMetric can also be used to calculate ROUGE scores (ROUGE-1, ROUGE-2, ROUGE-L) and generate a score report with all these elements. VERT has only been used for sentence summaries so far, but that doesn't mean it cannot be used for longer one. I would appreciate hearing how VERT does in evaluating longer summaries!    
+VertMetric evaluates the VERT score for a collection of generated summaries. VertMetric can also be used to calculate ROUGE scores (ROUGE-1, ROUGE-2, ROUGE-L) and generate a score report with all these elements. VERT has only been used for sentence summaries so far, but that doesn't mean it cannot be used for longer one. I would appreciate hearing how VERT does in evaluating longer summaries!  
+
+What makes up a VERT score?  
+Take a look at [VERT_INFO.md](VERT_INFO.md) for details and intuition.  
 
 ## Preparation Instructions  
 
@@ -10,6 +15,7 @@ VertMetric evaluates the VERT score for a collection of generated summaries. Ver
 - 9GB free disc space  
 - 10+ GB RAM  
 - Python 2.7  
+- currently patience for evaluating large sets  
 
 #### Steps:  
 
@@ -81,12 +87,17 @@ Example score report:
 VERT ranges from 0->1, with 1 being an identical summary. 
 
 ## Acknowledgements
-If this code helps you with your research, please consider citing our paper where these ideas came from.  
-*paste bibtex and arxiv link here*
+If this code helps you with your research, please consider citing our [paper](https://arxiv.org/abs/1810.08838) where these ideas came from.  
 
 This code is developed in part with support from the National Science Foundation under Grant No. 1659788 at the University of Colorado, Colorado Springs.
 
+Facebook Research's [InferSent](https://github.com/facebookresearch/InferSent) codebase.  
+Full implementation of ROGUE metric [here](https://github.com/pltrdy/rouge).  
+Word Mover Distance implementation by [GenSim](https://radimrehurek.com/gensim/models/keyedvectors.html).  
+[GloVe](https://nlp.stanford.edu/projects/glove/) embeddings by Stanford NLP group.  
+[Word2Vec](https://code.google.com/archive/p/word2vec/) embeddings from Google.  
+
 ## TODO  
-- installation with setup.py currently does not work. 
+- installation with [setup.py](setup.py) currently does not work. 
 - It would be nice to have a download script for the above data files. I don't think Google Drive allows this because of the file size, but this would be really nice to figure out.  
-- optimize the code to have lower memory requirements.
+- optimize the code to have lower memory requirements and run much faster.  
